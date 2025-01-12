@@ -14,20 +14,19 @@ class TestTextNode(unittest.TestCase):
         node2 = TextNode("This is a text node", TextType.LINK, "https://example.com")
         self.assertEqual(node, node2)
 
-    def test_eq_none_url(self):
-        node = TextNode("This is a text node", TextType.BOLD, None)
-        node2 = TextNode("This is a text node", TextType.BOLD, None)
-        self.assertEqual(node, node2)
-
-    def test_type_not_eq(self):
+    def test_not_eq_type(self):
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is a text node", TextType.LINK)
         self.assertNotEqual(node, node2)
 
-    def test_text_not_eq(self):
+    def test_not_eq_text(self):
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is another text node", TextType.BOLD)
         self.assertNotEqual(node, node2)
+
+    def test_repr(self):
+        node = TextNode("This is a text node", TextType.BOLD)
+        self.assertEqual(repr(node), "TextNode(This is a text node, bold, None)")
 
     def test_invalid_text_type(self):
         try:
