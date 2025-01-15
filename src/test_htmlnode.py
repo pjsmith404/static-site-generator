@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -39,6 +39,58 @@ class TestLeafNode(unittest.TestCase):
 
     def test_to_html_no_value(self):
         node = LeafNode("p", None)
+        self.assertRaises(ValueError, node.to_html)
+
+class TestParentNode(unittest.TestCase):
+    leaf_raw = LeafNode(None, "Raw text")
+    leaf_bold = LeafNode("b", "Bold text")
+    leaf_italic = LeafNode("i", "italic text")
+
+    props_1 = {"foo": "bar"}
+    props_2 = {"foo": "bar", "baz": "bay"}
+
+    leaf_raw_props = LeafNode(None, "Raw text", props_1)
+    leaf_bold_props = LeafNode("b", "Bold text", props_2)
+    leaf_italic_props = LeafNode("i", "italic text", props_1)
+
+    def test_to_html_1(self):
+        node = ParentNode("p", [self.leaf_raw])
+        self.assertEqual(node.to_html(), "<p>Raw text</p>")
+
+    def test_to_html_2(self):
+        node = ParentNode(
+            "p",
+            [
+                self.leaf_bold,
+                self.leaf_raw,
+                self.leaf_italic,
+                self.leaf_raw
+            ],
+        )
+        self.assertEqual(node.to_html(), "<p><b>Bold text</b>Raw text<i>italic text</i>Raw text</p>")
+
+    def test_to_html_3(self):
+        node = ParentNode("p", [self.leaf_raw], self.props_1)
+        self.assertEqual(node.to_html(), '<p foo="bar">Raw text</p>')
+
+    def test_to_html_4(self):
+        node = ParentNode("p", [self.leaf_raw], self.props_2)
+        self.assertEqual(node.to_html(), '<p foo="bar" baz="bay">Raw text</p>')
+
+    def test_to_html_5(self):
+        node = ParentNode("p", [self.leaf_raw_props], self.props_1)
+        self.assertEqual(node.to_html(), '<p foo="bar">Raw text</p>')
+
+    def test_to_html_6(self):
+        node = ParentNode("p", [self.leaf_raw_props, self.leaf_bold_props, self.leaf_italic_props], {"foo": "bar", "baz": "bay"})
+        self.assertEqual(node.to_html(), '<p foo="bar" baz="bay">Raw text<b foo="bar" baz="bay">Bold text</b><i foo="bar">italic text</i></p>')
+
+    def test_to_html_no_children(self):
+        node = ParentNode(None, [self.leaf_raw])
+        self.assertRaises(ValueError, node.to_html)
+
+    def test_to_html_no_children(self):
+        node = ParentNode("p", None)
         self.assertRaises(ValueError, node.to_html)
 
 if __name__ == "__main__":
