@@ -85,6 +85,11 @@ class TestParentNode(unittest.TestCase):
         node = ParentNode("p", [self.leaf_raw_props, self.leaf_bold_props, self.leaf_italic_props], {"foo": "bar", "baz": "bay"})
         self.assertEqual(node.to_html(), '<p foo="bar" baz="bay">Raw text<b foo="bar" baz="bay">Bold text</b><i foo="bar">italic text</i></p>')
 
+    def test_to_html_nested(self):
+        child_node = ParentNode("span", [self.leaf_bold])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), '<div><span><b>Bold text</b></span></div>')
+
     def test_to_html_no_children(self):
         node = ParentNode(None, [self.leaf_raw])
         self.assertRaises(ValueError, node.to_html)
