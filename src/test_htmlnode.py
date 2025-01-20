@@ -6,7 +6,10 @@ from htmlnode import HTMLNode, LeafNode, ParentNode
 class TestHTMLNode(unittest.TestCase):
     def test_repr(self):
         node = HTMLNode("div", "Some text", None, {"href": "https://example.com"})
-        self.assertEqual(repr(node), "HTMLNode(div, Some text, None, {'href': 'https://example.com'})")
+        self.assertEqual(
+            repr(node),
+            "HTMLNode(div, Some text, None, {'href': 'https://example.com'})"
+        )
 
     def test_values(self):
         node = HTMLNode("div", "I wish I could read")
@@ -67,7 +70,10 @@ class TestParentNode(unittest.TestCase):
                 self.leaf_raw
             ],
         )
-        self.assertEqual(node.to_html(), "<p><b>Bold text</b>Raw text<i>italic text</i>Raw text</p>")
+        self.assertEqual(
+            node.to_html(),
+            "<p><b>Bold text</b>Raw text<i>italic text</i>Raw text</p>"
+        )
 
     def test_to_html_3(self):
         node = ParentNode("p", [self.leaf_raw], self.props_1)
@@ -82,8 +88,15 @@ class TestParentNode(unittest.TestCase):
         self.assertEqual(node.to_html(), '<p foo="bar">Raw text</p>')
 
     def test_to_html_6(self):
-        node = ParentNode("p", [self.leaf_raw_props, self.leaf_bold_props, self.leaf_italic_props], {"foo": "bar", "baz": "bay"})
-        self.assertEqual(node.to_html(), '<p foo="bar" baz="bay">Raw text<b foo="bar" baz="bay">Bold text</b><i foo="bar">italic text</i></p>')
+        node = ParentNode(
+            "p",
+            [self.leaf_raw_props, self.leaf_bold_props, self.leaf_italic_props],
+            {"foo": "bar", "baz": "bay"}
+        )
+        self.assertEqual(
+            node.to_html(),
+            '<p foo="bar" baz="bay">Raw text<b foo="bar" baz="bay">Bold text</b><i foo="bar">italic text</i></p>'
+        )
 
     def test_to_html_nested(self):
         child_node = ParentNode("span", [self.leaf_bold])
