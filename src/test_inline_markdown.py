@@ -61,6 +61,13 @@ class TestSplitNode(unittest.TestCase):
         ]
         self.assertEqual(new_nodes, result)
 
+    def test_split_image_other(self):
+        node = TextNode("This is some bold text", TextType.BOLD)
+        new_nodes = split_nodes_image([node])
+        result = [
+            TextNode("This is some bold text", TextType.BOLD),
+        ]
+        self.assertEqual(new_nodes, result)
 
     def test_split_image_leading(self):
         node = TextNode("This is an ![image](https://example.com)", TextType.TEXT)
