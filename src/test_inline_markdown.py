@@ -197,7 +197,10 @@ class TestSplitNode(unittest.TestCase):
 
 class TestExtractMarkdown(unittest.TestCase):
     def test_extract_markdown_images(self):
-        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        text = (
+            "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) "
+            "and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        )
         self.assertEqual(
             extract_markdown_images(text),
             [
@@ -207,7 +210,10 @@ class TestExtractMarkdown(unittest.TestCase):
         )
 
     def test_extract_markdown_images_2(self):
-        text = "This is text with a [rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        text = (
+            "This is text with a [rick roll](https://i.imgur.com/aKaOqIh.gif) "
+            "and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        )
         self.assertEqual(
             extract_markdown_images(text),
             [
@@ -216,7 +222,10 @@ class TestExtractMarkdown(unittest.TestCase):
         )
 
     def test_extract_markdown_images_3(self):
-        text = "This is text with a ![rick roll(https://i.imgur.com/aKaOqIh.gif and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        text = (
+            "This is text with a ![rick roll(https://i.imgur.com/aKaOqIh.gif "
+            "and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        )
         self.assertEqual(
             extract_markdown_images(text),
             [
@@ -226,7 +235,10 @@ class TestExtractMarkdown(unittest.TestCase):
 
 
     def test_extract_markdown_links(self):
-        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        text = (
+            "This is text with a link [to boot dev](https://www.boot.dev) "
+            "and [to youtube](https://www.youtube.com/@bootdotdev)"
+        )
         self.assertEqual(
             extract_markdown_links(text),
             [
@@ -236,7 +248,10 @@ class TestExtractMarkdown(unittest.TestCase):
         )
 
     def test_extract_markdown_links_2(self):
-        text = "This is text with a link ![to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        text = (
+            "This is text with a link ![to boot dev](https://www.boot.dev) "
+            "and [to youtube](https://www.youtube.com/@bootdotdev)"
+        )
         self.assertEqual(
             extract_markdown_links(text),
             [
@@ -245,7 +260,10 @@ class TestExtractMarkdown(unittest.TestCase):
         )
 
     def test_extract_markdown_links_3(self):
-        text = "This is text with a link [to boot dev(https://www.boot.dev and [to youtube](https://www.youtube.com/@bootdotdev)"
+        text = (
+            "This is text with a link [to boot dev(https://www.boot.dev "
+            "and [to youtube](https://www.youtube.com/@bootdotdev)"
+        )
         self.assertEqual(
             extract_markdown_links(text),
             [
