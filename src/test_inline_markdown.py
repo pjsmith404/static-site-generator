@@ -1,6 +1,12 @@
 import unittest
 
-from inline_markdown import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
+from inline_markdown import (
+    split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
+    extract_markdown_images,
+    extract_markdown_links,
+)
 from textnode import TextNode, TextType
 
 class TestSplitNode(unittest.TestCase):
@@ -36,6 +42,128 @@ class TestSplitNode(unittest.TestCase):
             TextNode(" and ", TextType.TEXT),
             TextNode("italic", TextType.ITALIC),
             TextNode(" text", TextType.TEXT)
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_image_only(self):
+        node = TextNode("![image](https://example.com)", TextType.TEXT)
+        new_nodes = split_nodes_image([node])
+        result = [
+            TextNode("image", TextType.IMAGE, "https://example.com"),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_image_none(self):
+        node = TextNode("This is some text", TextType.TEXT)
+        new_nodes = split_nodes_image([node])
+        result = [
+            TextNode("This is some text", TextType.TEXT),
+        ]
+        self.assertEqual(new_nodes, result)
+
+
+    def test_split_image_leading(self):
+        node = TextNode("This is an ![image](https://example.com)", TextType.TEXT)
+        new_nodes = split_nodes_image([node])
+        result = [
+            TextNode("This is an ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://example.com"),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_image_trailing(self):
+        node = TextNode("This is an ![image](https://example.com) node.", TextType.TEXT)
+        new_nodes = split_nodes_image([node])
+        result = [
+            TextNode("This is an ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://example.com"),
+            TextNode(" node.", TextType.TEXT)
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_image_duplicate(self):
+        node = TextNode(
+            "This is an ![image](https://example.com) node doubled ![image](https://example.com)",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_image([node])
+        result = [
+            TextNode("This is an ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://example.com"),
+            TextNode(" node doubled ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://example.com"),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_only(self):
+        node = TextNode("[link](https://example.com)", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        result = [
+            TextNode("link", TextType.LINK, "https://example.com"),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_none(self):
+        node = TextNode("This is some text", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        result = [
+            TextNode("This is some text", TextType.TEXT),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_other(self):
+        node = TextNode("This is some bold text", TextType.BOLD)
+        new_nodes = split_nodes_link([node])
+        result = [
+            TextNode("This is some bold text", TextType.BOLD),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_leading(self):
+        node = TextNode("This is a [link](https://example.com)", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        result = [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://example.com"),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_trailing(self):
+        node = TextNode("This is a [link](https://example.com) node.", TextType.TEXT)
+        new_nodes = split_nodes_link([node])
+        result = [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://example.com"),
+            TextNode(" node.", TextType.TEXT)
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_duplicate(self):
+        node = TextNode(
+            "This is a [link](https://example.com) node doubled [link](https://example.com)",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        result = [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://example.com"),
+            TextNode(" node doubled ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://example.com"),
+        ]
+        self.assertEqual(new_nodes, result)
+
+    def test_split_link_and_image(self):
+        node = TextNode(
+            "This is a [link](https://example.com) and ![image](https://example.com)",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        new_nodes = split_nodes_image(new_nodes)
+        result = [
+            TextNode("This is a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://example.com"),
+            TextNode(" and ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://example.com"),
         ]
         self.assertEqual(new_nodes, result)
 
