@@ -64,8 +64,7 @@ def convert_code_to_htmlnode(block):
 def convert_quote_to_htmlnode(block):
     trimmed_lines = trim_block_lines(block, "> ")
     leafnodes = block_text_to_leafnodes(trimmed_lines)
-    p_htmlnode = ParentNode("p", leafnodes)
-    quote_htmlnode = ParentNode("blockquote", [p_htmlnode])
+    quote_htmlnode = ParentNode("blockquote", leafnodes)
 
     return quote_htmlnode
 
