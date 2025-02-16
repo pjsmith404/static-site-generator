@@ -1,11 +1,8 @@
 import os
 import shutil
 
-def copy_static(src, dst):
+def copy_files(src, dst):
     contents = os.listdir(src)
-    print(f"Emptying {dst}")
-    shutil.rmtree(dst, ignore_errors=True)
-    os.mkdir(dst)
 
     for c in contents:
         src_path = os.path.join(src, c)
@@ -16,4 +13,4 @@ def copy_static(src, dst):
         else:
             if not os.path.exists(dst_path):
                 os.mkdir(dst_path)
-            copy_static(src_path, dst_path)
+            copy_files(src_path, dst_path)
