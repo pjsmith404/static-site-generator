@@ -69,8 +69,10 @@ def convert_quote_to_htmlnode(block):
     return quote_htmlnode
 
 def convert_list_to_htmlnode(block, ordered):
-    trimmed_lines = trim_block_lines(trim_block_lines(block, "- "), "* ")
-    trimmed_lines = trim_block_lines(trimmed_lines, "1234567890. ")
+    if block.startswith("- ") or block.startswith("* "):
+        trimmed_lines = "\n".join([line[2:] for line in block.split("\n")])
+    else:
+        trimmed_lines = trim_block_lines(block, "1234567890. ")
 
     lines = trimmed_lines.split("\n")
     list_item_htmlnodes = []

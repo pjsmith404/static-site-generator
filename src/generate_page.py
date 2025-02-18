@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from markdown_html import markdown_to_html_node
 
@@ -27,3 +28,17 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "x") as file:
         file.write(content)
 
+def generate_page_recursive(dir_path_content, template_path, dest_dir_content):
+    contents = os.listdir(dir_path_content)
+
+    for c in contents:
+        src = os.path.join(dir_path_content, c)
+        html_dst = c.replace(".md", ".html")
+        dst = os.path.join(dest_dir_content, html_dst)
+        print(src)
+        if os.path.isfile(src) and src.endswith(".md"):
+            generate_page(src, template_path, dst)
+        else:
+            if not os.path.exists(dst):
+                os.mkdir(dst)
+            generate_page_recursive(src, template_path, dst)
